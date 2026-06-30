@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Disha · Allen Test Analysis</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2127; --ink2:#5b6470; --muted:#8a929d;
+    --line:#e6e9ee; --teal:#1baf7a; --teal-d:#0f6e56; --purple:#4a3aa7; --amber:#eda100;
+    --red:#e34948; --red-d:#a32d2d; --green:#1baf7a; --gray:#c3c2b7;
+    --accent:#2a78d6; --shadow:0 1px 3px rgba(20,30,50,.06),0 1px 2px rgba(20,30,50,.04);
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased;font-size:15px}
+  .wrap{max-width:1040px;margin:0 auto;padding:28px 20px 80px}
+  header.top{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    border-bottom:2px solid var(--line);padding-bottom:18px;margin-bottom:8px}
+  h1{font-size:26px;margin:0;font-weight:650;letter-spacing:-.4px}
+  .sub{color:var(--ink2);font-size:14px;margin-top:4px}
+  h2{font-size:19px;margin:38px 0 6px;font-weight:600;letter-spacing:-.2px}
+  h2 .hint{font-size:13px;font-weight:400;color:var(--muted);margin-left:8px}
+  p.lead{color:var(--ink2);margin:0 0 16px;font-size:14px}
+  .strategy{background:linear-gradient(0deg,#fbfdfc,#fbfdfc),var(--card);border:1px solid #cfe9dd;
+    border-left:4px solid var(--teal);border-radius:var(--radius);padding:16px 18px;margin-top:20px;box-shadow:var(--shadow)}
+  .strategy-h{font-weight:650;font-size:15px;color:var(--teal-d);margin-bottom:12px}
+  .strategy-order{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+  .strategy-order .step{font-size:13.5px;font-weight:600;padding:5px 12px;border-radius:8px;white-space:nowrap}
+  .strategy-order .arr{color:var(--muted);font-weight:600}
+  .step.s1{background:#e1f5ee;color:#0f6e56}
+  .step.s2{background:#e7f3d9;color:#3b6d11}
+  .step.s3{background:#e6f1fb;color:#185fa5}
+  .step.s4{background:#efe9fb;color:#4a3aa7}
+  .step.s5{background:#f1eff0;color:#5b6470}
+  .strategy-why{font-size:13px;color:var(--ink2)}
+  .strategy-why b{color:var(--ink)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+  .card .lbl{font-size:12.5px;color:var(--ink2);font-weight:500}
+  .card .big{font-size:30px;font-weight:680;letter-spacing:-.6px;margin:6px 0 2px}
+  .card .sm{font-size:12.5px;color:var(--muted)}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:20px;margin-bottom:8px}
+  .pill.oly{background:#efe9fb;color:#4a3aa7}
+  .pill.cbse{background:#e1f5ee;color:#0f6e56}
+  .chartbox{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 18px 14px;box-shadow:var(--shadow);margin-top:14px}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:2px 0 12px;font-size:12.5px;color:var(--ink2)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .canvas-h{position:relative;width:100%}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-top:14px;font-size:13.5px}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:#fafbfc;font-weight:600;color:var(--ink2);font-size:12.5px;text-transform:uppercase;letter-spacing:.3px}
+  tr:last-child td{border-bottom:none}
+  td.num,th.num{text-align:center;font-variant-numeric:tabular-nums}
+  .up{color:var(--teal-d);font-weight:600}
+  .down{color:var(--red-d);font-weight:600}
+  .flat{color:var(--ink2)}
+  .tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;white-space:nowrap}
+  .tag.oly{background:#efe9fb;color:#4a3aa7}
+  .tag.cbse{background:#e1f5ee;color:#0f6e56}
+  .note{font-size:12.5px;color:var(--muted);margin-top:10px}
+  details.port{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:0 16px;box-shadow:var(--shadow);margin-top:12px}
+  details.port summary{cursor:pointer;padding:13px 0;font-weight:600;font-size:14px;list-style:none}
+  details.port summary::-webkit-details-marker{display:none}
+  details.port summary::before{content:"▸";margin-right:8px;color:var(--muted)}
+  details.port[open] summary::before{content:"▾"}
+  details.port .pbody{padding:0 0 14px;font-size:13.5px;color:var(--ink2)}
+  details.port .pbody div{padding:3px 0}
+  details.port b{color:var(--ink)}
+  /* mistakes */
+  .mtest{margin-top:18px}
+  .mhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .mhead h3{font-size:16px;margin:0;font-weight:600}
+  table.mist{font-size:13px}
+  table.mist td{vertical-align:top}
+  table.mist td[contenteditable]{outline:none}
+  table.mist td[contenteditable]:focus{background:#fffbe9;box-shadow:inset 0 0 0 2px #f0d98a}
+  table.mist .etype{font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px;background:#f1eef9;color:#4a3aa7;display:inline-block}
+  .del{cursor:pointer;color:var(--muted);border:none;background:none;font-size:15px;padding:2px 6px;border-radius:6px}
+  .del:hover{background:#fdecec;color:var(--red-d)}
+  .btn{cursor:pointer;border:1px solid var(--line);background:var(--card);border-radius:8px;
+    padding:7px 13px;font-size:13px;font-weight:500;color:var(--ink);transition:.12s}
+  .btn:hover{background:#f4f6f8;border-color:#d4d9e0}
+  .btn.add{color:var(--accent);border-color:#cfe0f5}
+  .btn.add:hover{background:#eef5fd}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 0}
+  .saved{font-size:12px;color:var(--teal-d);opacity:0;transition:.3s}
+  .saved.show{opacity:1}
+  footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+  @media print{body{background:#fff}.btn,.del,.toolbar{display:none!important}
+    .chartbox,.card,table,details.port{box-shadow:none}details.port{border:1px solid #ccc}
+    details.port[open] .pbody, details.port .pbody{display:block}details.port{open:true}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <h1>Disha — Allen Test Progress</h1>
+      <div class="sub">Class 10 SRG · Allen Jayanagar · Analysis &amp; mistake log · prepared 30 Jun 2026</div>
+    </div>
+    <div class="sub" style="text-align:right">
+      SRG = olympiad-level · NCERT = standard CBSE batch<br>
+      SRG marking: +3 / −1 / 0
+    </div>
+  </header>
+
+  <p class="lead">Two difficulty regimes: the <b>NCERT/CBSE</b> test measures command of the standard syllabus; the <b>SRG</b> tests stretch the same chapters to olympiad depth. Comparisons use <b>accuracy (correct ÷ attempted)</b> — the only metric that is fair across tests with different question counts and negative marking.</p>
+
+  <div class="strategy">
+    <div class="strategy-h">⏱ Attempt strategy — NEET-first (then JEE)</div>
+    <div class="strategy-order">
+      <span class="step s1">1 · Biology</span><span class="arr">→</span>
+      <span class="step s2">2 · Chemistry</span><span class="arr">→</span>
+      <span class="step s3">3 · Physics</span><span class="arr">→</span>
+      <span class="step s4">4 · Maths</span><span class="arr">→</span>
+      <span class="step s5">5 · MAT</span>
+    </div>
+    <div class="strategy-why">Lock the high-value PCB marks while fresh (Biology = 50% of NEET); Maths next for JEE; MAT last with remaining time. <b>Keep a per-subject time budget</b> — SRG 1 had no time tracking and over-spent on MAT &amp; Maths.</div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <span class="pill oly">SRG Test 1 · olympiad</span>
+      <div class="lbl">26 Apr 2026</div>
+      <div class="big">174<span style="font-size:16px;color:var(--muted)">/225</span></div>
+      <div class="sm">77% · rank 64/552 · campus 8/44</div>
+    </div>
+    <div class="card">
+      <span class="pill cbse">NCERT Test 2 · CBSE</span>
+      <div class="lbl">21 Jun 2026</div>
+      <div class="big">206<span style="font-size:16px;color:var(--muted)">/210</span></div>
+      <div class="sm">98% · rank 4/634 · campus 1/107</div>
+    </div>
+    <div class="card">
+      <span class="pill oly">SRG Test 2 · olympiad</span>
+      <div class="lbl">28 Jun 2026</div>
+      <div class="big">128<span style="font-size:16px;color:var(--muted)">/180</span></div>
+      <div class="sm">71% · provisional (rank pending)</div>
+    </div>
+  </div>
+
+  <!-- ===== CHART 1: subjectwise SRG1 vs SRG2 ===== -->
+  <h2>SRG 1 vs SRG 2 — subject by subject <span class="hint">accuracy, each subject separate</span></h2>
+  <div class="chartbox">
+    <div class="legend">
+      <span><i class="dot" style="background:#4a3aa7"></i>SRG 1 · 26 Apr</span>
+      <span><i class="dot" style="background:#eda100"></i>SRG 2 · 28 Jun</span>
+    </div>
+    <div class="canvas-h" style="height:300px"><canvas id="c_sub"></canvas></div>
+  </div>
+
+  <!-- ===== CHART 2: question outcomes (fair view) ===== -->
+  <h2>Question outcomes <span class="hint">correct / wrong / left — the honest counts</span></h2>
+  <div class="chartbox">
+    <div class="legend">
+      <span><i class="dot" style="background:#1baf7a"></i>correct (+3)</span>
+      <span><i class="dot" style="background:#e34948"></i>wrong (−1)</span>
+      <span><i class="dot" style="background:#c3c2b7"></i>left (0)</span>
+    </div>
+    <div class="canvas-h" style="height:470px"><canvas id="c_out"></canvas></div>
+    <div class="note">Bar length shows the real test size — SRG 1 had 15 Q per subject; SRG 2 had 10 Q in Physics/Chemistry/Biology. One question = ~10% on a 10-Q subject, so treat single-subject swings under ~2 questions as noise.</div>
+  </div>
+
+  <!-- ===== CHART 3: NEET vs JEE ===== -->
+  <h2>NEET vs JEE — stream view <span class="hint">pooled composite accuracy</span></h2>
+  <div class="chartbox">
+    <div class="legend">
+      <span><i class="dot" style="background:#1baf7a"></i>NEET · PCB (Phy+Chem+Bio)</span>
+      <span><i class="dot" style="background:#4a3aa7"></i>JEE · PCM (Phy+Chem+Maths)</span>
+    </div>
+    <div class="canvas-h" style="height:280px"><canvas id="c_stream"></canvas></div>
+    <div class="note">Physics &amp; Chemistry are shared, so the gap between bars is driven only by Biology (NEET) vs Maths (JEE). The streams track within ~2 points — currently stream-agnostic.</div>
+  </div>
+
+  <!-- ===== CHART 4: differentiator ===== -->
+  <h2>The differentiator <span class="hint">Biology (NEET) vs Maths (JEE)</span></h2>
+  <div class="chartbox">
+    <div class="legend">
+      <span><i class="dot" style="background:#1baf7a"></i>Biology</span>
+      <span><i class="dot" style="background:#4a3aa7"></i>Maths</span>
+    </div>
+    <div class="canvas-h" style="height:260px"><canvas id="c_diff"></canvas></div>
+  </div>
+
+  <!-- ===== TABLE: test summary ===== -->
+  <h2>Test summary</h2>
+  <table>
+    <thead><tr>
+      <th>Test</th><th>Date</th><th>Level</th><th class="num">Score</th><th class="num">%</th>
+      <th class="num">Correct</th><th class="num">Wrong</th><th class="num">Left</th><th>Rank</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>SRG Test 1</td><td>26 Apr 2026</td><td><span class="tag oly">olympiad</span></td>
+        <td class="num">174/225</td><td class="num">77%</td><td class="num">60</td><td class="num">6</td><td class="num">9</td><td>64/552 (81.8%ile)</td></tr>
+      <tr><td>NCERT Test 2</td><td>21 Jun 2026</td><td><span class="tag cbse">CBSE</span></td>
+        <td class="num">206/210</td><td class="num">98%</td><td class="num">69</td><td class="num">1</td><td class="num">0</td><td>4/634 (99.7%ile)</td></tr>
+      <tr><td>SRG Test 2</td><td>28 Jun 2026</td><td><span class="tag oly">olympiad</span></td>
+        <td class="num">128/180</td><td class="num">71%</td><td class="num">46</td><td class="num">10</td><td class="num">4</td><td>provisional</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ===== TABLE: subject detail ===== -->
+  <h2>Subject detail <span class="hint">correct / wrong / left, marks, accuracy</span></h2>
+  <table>
+    <thead><tr>
+      <th>Subject</th><th>Test</th><th class="num">Q</th><th class="num">Correct</th>
+      <th class="num">Wrong</th><th class="num">Left</th><th class="num">Marks</th><th class="num">Accuracy</th>
+    </tr></thead>
+    <tbody id="subTbody"></tbody>
+  </table>
+  <div class="note">Accuracy = correct ÷ attempted (excludes unattempted). Trend column on the SRG-2 rows compares to SRG 1.</div>
+
+  <!-- ===== TABLE: change ===== -->
+  <h2>Change: SRG 1 → SRG 2 <span class="hint">what survives the fairness test</span></h2>
+  <table>
+    <thead><tr><th>Subject</th><th class="num">SRG 1 acc</th><th class="num">SRG 2 acc</th><th class="num">Δ</th><th>Read</th></tr></thead>
+    <tbody>
+      <tr><td>Physics</td><td class="num">75%</td><td class="num">100%</td><td class="num up">+25</td><td>Genuine — same 9 right, stopped the wrong guesses</td></tr>
+      <tr><td>Mental Ability</td><td class="num">91%</td><td class="num">87%</td><td class="num flat">−4</td><td>Stable; attempted all (4 left → 0), 3 more correct</td></tr>
+      <tr><td>Chemistry</td><td class="num">93%</td><td class="num">89%</td><td class="num flat">−4</td><td>Essentially flat — steady strength</td></tr>
+      <tr><td>Biology</td><td class="num">93%</td><td class="num">70%</td><td class="num down">−23</td><td>Real decline — priority (50% of NEET); fixable precision gap</td></tr>
+      <tr><td>Maths</td><td class="num">100%</td><td class="num">69%</td><td class="num down">−31</td><td>Real decline — quadratics; outside NEET/ASAT track</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ===== PORTIONS ===== -->
+  <h2>Syllabus covered</h2>
+  <details class="port"><summary>SRG Test 1 — 26 Apr 2026</summary>
+    <div class="pbody">
+      <div><b>Physics:</b> Reflection of light (till basic terms of spherical mirrors)</div>
+      <div><b>Chemistry:</b> Chemical reactions &amp; equations (till decomposition reactions)</div>
+      <div><b>Biology:</b> Nutrition (in plants only)</div>
+      <div><b>Maths:</b> Polynomials</div>
+      <div><b>MAT:</b> Verbal series, mirror &amp; water images</div>
+    </div>
+  </details>
+  <details class="port"><summary>NCERT / Minor Test 2 — 21 Jun 2026</summary>
+    <div class="pbody">
+      <div><b>Physics:</b> Optics — Reflection of light (complete)</div>
+      <div><b>Chemistry:</b> Chemical reactions &amp; equations (complete); Acids, bases &amp; salts (till reaction of metal carbonates/bicarbonates with acids)</div>
+      <div><b>Biology:</b> Nutrition in animals (complete); Respiration (till building concept 1)</div>
+      <div><b>Maths:</b> Polynomials (complete); Pair of linear equations in two variables (till elimination method)</div>
+      <div><b>MAT:</b> Analytical reasoning, coding-decoding</div>
+      <div><b>SST:</b> The rise of nationalism in Europe</div>
+    </div>
+  </details>
+  <details class="port"><summary>SRG Test 2 — 28 Jun 2026</summary>
+    <div class="pbody">
+      <div><b>Physics:</b> Reflection (complete); Refraction (complete)</div>
+      <div><b>Chemistry:</b> Chemical reactions &amp; equations (complete); Acids, bases &amp; salts (till chemical properties of base)</div>
+      <div><b>Biology:</b> Nutrition in animals (complete); Respiration (up to gaseous exchange in plants)</div>
+      <div><b>Maths:</b> Polynomials; Quadratic equations</div>
+      <div><b>MAT:</b> Analytical reasoning, coding-decoding, alphabet test, embedded figures, alpha-numeric sequence puzzle</div>
+    </div>
+  </details>
+
+  <!-- ===== MISTAKES & CORRECTIONS ===== -->
+  <h2>Mistakes &amp; corrections log <span class="hint">edit any cell · auto-saves in this browser</span></h2>
+  <p class="lead">Document each wrong/confused question here: what went wrong and the corrected concept. Click any cell to edit. Entries are saved in this browser (localStorage) — use <b>Export</b> to keep a copy.</p>
+  <div id="mistRoot"></div>
+  <div class="toolbar">
+    <button class="btn" onclick="exportData()">⬇ Export log (JSON)</button>
+    <button class="btn" onclick="importData()">⬆ Import log</button>
+    <button class="btn" onclick="resetData()">↻ Reset to document defaults</button>
+    <button class="btn" onclick="window.print()">🖨 Print / PDF</button>
+    <span class="saved" id="savedMsg">✓ saved</span>
+  </div>
+  <input type="file" id="fileIn" accept="application/json" style="display:none" />
+
+  <footer>
+    Source: Allen result screenshots in <code>~/Documents/Disha/AllenTests/results/</code>.
+    SRG ranks from official results; SRG 2 provisional. Accuracy = correct ÷ attempted.
+    NEET = PCB, JEE = PCM. This file is self-contained; charts load Chart.js from CDN (needs internet).
+  </footer>
+
+</div>
+
+<script>
+/* ---------- data ---------- */
+const SUBJECTS = [
+  // subject, {test:[C,W,U,marks,Q]}
+  {s:'Physics',        srg1:[9,3,3,24,15], srg2:[9,0,1,27,10], ncert:[10,0,0,30,10]},
+  {s:'Chemistry',      srg1:[14,1,0,41,15],srg2:[8,1,1,23,10], ncert:[10,0,0,30,10]},
+  {s:'Biology',        srg1:[14,1,0,41,15],srg2:[7,3,0,18,10], ncert:[10,0,0,30,10]},
+  {s:'Maths',          srg1:[13,0,2,39,15],srg2:[9,4,2,23,15], ncert:[15,0,0,45,15]},
+  {s:'Mental Ability', srg1:[10,1,4,29,15],srg2:[13,2,0,37,15],ncert:[14,1,0,41,15]},
+  {s:'Social Science', srg1:null,          srg2:null,          ncert:[10,0,0,30,10]}
+];
+const acc = (a)=> a ? Math.round(100*a[0]/(a[0]+a[1])) : null; // correct/attempted
+
+/* ---------- subject detail table ---------- */
+(function(){
+  const tb = document.getElementById('subTbody');
+  const order = [['SRG 1','srg1','oly'],['SRG 2','srg2','oly'],['NCERT 2','ncert','cbse']];
+  SUBJECTS.forEach(sub=>{
+    let shownName=false;
+    order.forEach(([label,key,cls],i)=>{
+      const d = sub[key]; if(!d) return;
+      const nameCell = shownName ? '' : sub.s; shownName=true;
+      let trend='';
+      if(key==='srg2' && sub.srg1){
+        const delta = acc(sub.srg2)-acc(sub.srg1);
+        const c = delta>2?'up':(delta<-2?'down':'flat');
+        trend = ` <span class="${c}">(${delta>=0?'+':''}${delta})</span>`;
+      }
+      tb.insertAdjacentHTML('beforeend',
+        `<tr><td>${nameCell}</td><td><span class="tag ${cls}">${label}</span></td>`+
+        `<td class="num">${d[4]}</td><td class="num">${d[0]}</td><td class="num">${d[1]}</td>`+
+        `<td class="num">${d[2]}</td><td class="num">${d[3]}</td>`+
+        `<td class="num">${acc(d)}%${trend}</td></tr>`);
+    });
+  });
+})();
+
+/* ---------- charts ---------- */
+const GRID='rgba(137,135,129,0.18)', MUTED='#8a929d';
+const baseOpts=(maxY=100,pct=true)=>({responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+Math.round(c.parsed.y??c.parsed.x)+(pct?'%':' Q')}}},
+  scales:{y:{beginAtZero:true,max:maxY,ticks:{color:MUTED,callback:v=>v+(pct?'%':'')},grid:{color:GRID}},
+          x:{ticks:{color:MUTED,autoSkip:false},grid:{display:false}}}});
+
+new Chart(c_sub,{type:'bar',data:{labels:['Physics','Chemistry','Biology','Maths','Mental Ability'],
+  datasets:[{label:'SRG 1',data:[75,93,93,100,91],backgroundColor:'#4a3aa7',borderRadius:4},
+            {label:'SRG 2',data:[100,89,70,69,87],backgroundColor:'#eda100',borderRadius:4}]},options:baseOpts()});
+
+new Chart(c_out,{type:'bar',data:{
+  labels:['Physics · SRG1 (15Q)','Physics · SRG2 (10Q)','Chemistry · SRG1 (15Q)','Chemistry · SRG2 (10Q)',
+          'Biology · SRG1 (15Q)','Biology · SRG2 (10Q)','Maths · SRG1 (15Q)','Maths · SRG2 (15Q)',
+          'Mental Ability · SRG1 (15Q)','Mental Ability · SRG2 (15Q)'],
+  datasets:[
+    {label:'correct',data:[9,9,14,8,14,7,13,9,10,13],backgroundColor:'#1baf7a'},
+    {label:'wrong',  data:[3,0,1,1,1,3,0,4,1,2],backgroundColor:'#e34948'},
+    {label:'left',   data:[3,1,0,1,0,0,2,2,4,0],backgroundColor:'#c3c2b7'}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.parsed.x+' Q'}}},
+    scales:{x:{stacked:true,max:15,ticks:{color:MUTED,stepSize:5},grid:{color:GRID}},
+            y:{stacked:true,ticks:{color:MUTED,font:{size:11}},grid:{display:false}}}}});
+
+new Chart(c_stream,{type:'bar',data:{labels:['SRG 1 (olympiad)','SRG 2 (olympiad)','NCERT 2 (CBSE)'],
+  datasets:[{label:'NEET',data:[88,86,100],backgroundColor:'#1baf7a',borderRadius:4},
+            {label:'JEE', data:[90,84,100],backgroundColor:'#4a3aa7',borderRadius:4}]},options:baseOpts()});
+
+new Chart(c_diff,{type:'line',data:{labels:['SRG 1','SRG 2','NCERT 2'],
+  datasets:[{label:'Biology',data:[93,70,100],borderColor:'#1baf7a',backgroundColor:'#1baf7a',borderWidth:2,pointRadius:5,tension:.2},
+            {label:'Maths',  data:[100,69,100],borderColor:'#4a3aa7',backgroundColor:'#4a3aa7',borderWidth:2,borderDash:[6,4],pointRadius:5,pointStyle:'rectRot',tension:.2}]},
+  options:baseOpts()});
+
+/* ---------- mistakes & corrections (editable + localStorage) ---------- */
+const MKEY='disha_mistakes_v3';
+const TESTS=[
+  {k:'srg1', name:'SRG Test 1 · 26 Apr 2026', cls:'oly'},
+  {k:'ncert',name:'NCERT / Minor Test 2 · 21 Jun 2026', cls:'cbse'},
+  {k:'srg2', name:'SRG Test 2 · 28 Jun 2026', cls:'oly'}
+];
+const SEED={
+  srg1:[
+    {sub:'All subjects', q:'Time management', mistake:'No per-subject time tracking. Over-spent on MAT and Maths, leaving less time/attention for the core NEET subjects.', fix:'Fixed attempt order (NEET-first): Biology → Chemistry → Physics → Maths → MAT. Lock the high-value PCB marks while fresh; Maths next (JEE); MAT last with the time that remains. Keep a rough per-subject time budget.', type:'Time mgmt'}
+  ],
+  ncert:[],
+  srg2:[
+    {sub:'Pacing (went well)', q:'Bio → Chem → Physics', mistake:'—', fix:'Followed the NEET-first order: Biology + Chemistry done together in ~25 min, Physics ~30 min — good pace, on strategy. Time tracking held up to here.', type:'Timing'},
+    {sub:'Maths', q:'Opening questions / abandoned subject', mistake:'First 3 Maths questions would not click, so she jumped straight to MAT and only came back to Maths later — and stopped tracking time from this point on.', fix:'If stuck on the opening questions, skip WITHIN Maths and keep going — do not abandon the whole subject. Track time after each subject so the clock is never lost.', type:'Time mgmt'},
+    {sub:'Maths', q:'Ticked without solving', mistake:'Marked several Maths questions without actually solving them — questions she was capable of solving — because of the 2-hour time crunch.', fix:'Do not tick a question you have not solved: with −1 marking a blind tick can cost marks. Budget time so solvable questions get solved; leave blank rather than guess.', type:'Negative marking'},
+    {sub:'Whole paper', q:'False "time up" call', mistake:'Invigilator announced time-up ~15 min early (corrected later), which caused panic and rushed marking.', fix:'Trust your own tracked time / watch — a verbal call can be wrong. Stay calm and verify against your own clock before rushing.', type:'Exam conditions'},
+    {sub:'Biology', q:'Enzyme / metabolism terms', mistake:'Confused precise vocabulary — catabolic vs anabolic, maltose (sugar) vs maltase (enzyme), exocrine vs endocrine.', fix:'Catabolic = breakdown + releases energy; anabolic = build-up + uses energy. Maltase is the enzyme that digests maltose. Memorise the -ose=sugar / -ase=enzyme rule.', type:'Vocabulary'},
+    {sub:'Biology', q:'Q29 — ruminant digestion', mistake:'Marked an unfamiliar statement wrong because she had not seen the term (omasum/abomasum).', fix:'Rule: only mark a statement wrong if you can actually fault it. Unfamiliar ≠ false. (Beyond-NCERT — flag to teacher.)', type:'Exam strategy'},
+    {sub:'Mental Ability', q:'Coding-decoding', mistake:'Misread question direction — "means/called", code-for vs word-for.', fix:'Underline whether the question asks code→word or word→code before solving.', type:'Misread'},
+    {sub:'Chemistry', q:'Q14 — zinc surface blackening', mistake:'Content beyond NCERT/Xam Idea.', fix:'Note as enrichment; confirm with teacher whether in scope.', type:'Beyond syllabus'}
+  ]
+};
+let MDATA = load();
+function load(){ try{ const s=localStorage.getItem(MKEY); if(s) return JSON.parse(s);}catch(e){} return JSON.parse(JSON.stringify(SEED)); }
+function save(){ localStorage.setItem(MKEY,JSON.stringify(MDATA)); flashSaved(); }
+function flashSaved(){ const m=document.getElementById('savedMsg'); m.classList.add('show'); clearTimeout(window._st); window._st=setTimeout(()=>m.classList.remove('show'),1200); }
+
+function renderMist(){
+  const root=document.getElementById('mistRoot'); root.innerHTML='';
+  TESTS.forEach(t=>{
+    const rows=MDATA[t.k]||[];
+    const sec=document.createElement('div'); sec.className='mtest';
+    sec.innerHTML=`<div class="mhead"><span class="tag ${t.cls}">${t.cls==='oly'?'olympiad':'CBSE'}</span><h3>${t.name}</h3>
+      <span style="color:var(--muted);font-size:12.5px">${rows.length} logged</span></div>`;
+    const tbl=document.createElement('table'); tbl.className='mist';
+    tbl.innerHTML=`<thead><tr><th style="width:13%">Subject</th><th style="width:20%">Question / topic</th>
+      <th style="width:30%">What went wrong</th><th style="width:30%">Correction / right concept</th>
+      <th style="width:7%">Type</th><th style="width:24px"></th></tr></thead>`;
+    const tbody=document.createElement('tbody');
+    rows.forEach((r,idx)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=
+        `<td contenteditable data-f="sub">${esc(r.sub)}</td>`+
+        `<td contenteditable data-f="q">${esc(r.q)}</td>`+
+        `<td contenteditable data-f="mistake">${esc(r.mistake)}</td>`+
+        `<td contenteditable data-f="fix">${esc(r.fix)}</td>`+
+        `<td contenteditable data-f="type"><span class="etype">${esc(r.type)}</span></td>`+
+        `<td><button class="del" title="delete">✕</button></td>`;
+      tr.querySelectorAll('[contenteditable]').forEach(td=>{
+        td.addEventListener('blur',()=>{ MDATA[t.k][idx][td.dataset.f]= td.dataset.f==='type'? td.innerText.trim(): td.innerText.trim(); save(); });
+      });
+      tr.querySelector('.del').addEventListener('click',()=>{ MDATA[t.k].splice(idx,1); save(); renderMist(); });
+      tbody.appendChild(tr);
+    });
+    tbl.appendChild(tbody); sec.appendChild(tbl);
+    const add=document.createElement('button'); add.className='btn add'; add.style.marginTop='8px';
+    add.textContent='+ Add mistake';
+    add.addEventListener('click',()=>{ (MDATA[t.k]=MDATA[t.k]||[]).push({sub:'',q:'',mistake:'',fix:'',type:''}); save(); renderMist(); });
+    sec.appendChild(add);
+    root.appendChild(sec);
+  });
+}
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+renderMist();
+
+function exportData(){
+  const blob=new Blob([JSON.stringify(MDATA,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='disha-mistakes-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+}
+function importData(){ document.getElementById('fileIn').click(); }
+function resetData(){ if(confirm('Reset the mistake log to the defaults baked into this file? Your own added entries will be replaced. Export first if you want to keep them.')){ MDATA=JSON.parse(JSON.stringify(SEED)); save(); renderMist(); } }
+document.getElementById('fileIn').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f) return; const rd=new FileReader();
+  rd.onload=()=>{ try{ MDATA=JSON.parse(rd.result); save(); renderMist(); }catch(err){ alert('Invalid JSON'); } };
+  rd.readAsText(f);
+});
+</script>
+</body>
+</html>
